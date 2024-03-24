@@ -120,7 +120,7 @@ const KanbanBoard: React.FC = () => {
     );
 
     return (
-        <section className="m-auto flex min-h-screen w-full overflow-x-auto overflow-y-hidden px-[40px] py-8">
+        <section className="m-auto flex min-h-[72vh] w-full overflow-x-auto overflow-y-hidden px-[40px] py-8">
             <DndContext
                 sensors={sensors}
                 onDragStart={onDragStart}
