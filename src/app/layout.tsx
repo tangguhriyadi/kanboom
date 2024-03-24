@@ -3,6 +3,7 @@ import { Outfit } from "next/font/google";
 import "./globals.css";
 import Navbar from "../components/organisms/Navbar";
 import Footer from "../components/organisms/Footer";
+import ogImage from "./opengraph-image.png";
 
 const outfit = Outfit({ subsets: ["latin"] });
 
@@ -11,7 +12,7 @@ export const generateMetadata = (): Metadata => {
 
     const url = isLocal
         ? "http://localhost:3000"
-        : "https://tangguhriyadi.vercel.app";
+        : "https://kanboom.vercel.app";
 
     return {
         metadataBase: new URL(url),
@@ -19,6 +20,24 @@ export const generateMetadata = (): Metadata => {
         description: "Kanban Apps by Muhammad Tangguh Riyadi",
         icons: {
             icon: ["/kb.png"],
+        },
+        openGraph: {
+            images: [
+                {
+                    url: ogImage.src,
+                    width: ogImage.width,
+                    height: ogImage.height,
+                },
+            ],
+        },
+        twitter: {
+            images: [
+                {
+                    url: ogImage.src,
+                    width: ogImage.width,
+                    height: ogImage.height,
+                },
+            ],
         },
     };
 };
