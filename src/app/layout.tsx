@@ -12,7 +12,7 @@ export const generateMetadata = (): Metadata => {
 
     const url = isLocal
         ? "http://localhost:3000"
-        : "https://kanboom.vercel.app";
+        : "https://kanboom-scrum.vercel.app";
 
     return {
         metadataBase: new URL(url),
