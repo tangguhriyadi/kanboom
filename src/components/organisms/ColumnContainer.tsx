@@ -80,9 +80,9 @@ const ColumnContainer: React.FC<ColumnContainerProps> = (props) => {
                 className="text-md h-[60px] cursor-grab rounded-md rounded-b-none p-3 font-bold bg-muted flex items-center justify-between"
             >
                 <div className="flex gap-2">
-                    <div className="flex justify-center items-center bg-muted px-2 py-1 text-sm rounded-full">
+                    {/* <div className="flex justify-center items-center bg-muted px-2 py-1 text-sm rounded-full">
                         0
-                    </div>
+                    </div> */}
                     {!editMode && column.title}
                     {editMode && (
                         <input
