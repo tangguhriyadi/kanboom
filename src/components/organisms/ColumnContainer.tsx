@@ -1,35 +1,32 @@
 "use client";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
-// import TrashIcon from "../icons/TrashIcon";
 import { CSS } from "@dnd-kit/utilities";
 import { useMemo, useState } from "react";
-import { Column, Id, Task } from "../../types/kanban";
+import { Column, Id, Task } from "@/types/kanban";
 import TrashIcon from "../atoms/TrashIcon";
 import PlusIcon from "../atoms/PlusIcon";
 import TaskCard from "../molecules/TaskCard";
-// import PlusIcon from "../icons/PlusIcon";
-// import TaskCard from "./TaskCard";
 
-interface Props {
+interface ColumnContainerProps {
     column: Column;
     deleteColumn: (id: Id) => void;
     updateColumn: (id: Id, title: string) => void;
-
     createTask: (columnId: Id) => void;
     updateTask: (id: Id, content: string) => void;
     deleteTask: (id: Id) => void;
     tasks: Task[];
 }
 
-function ColumnContainer({
-    column,
-    deleteColumn,
-    updateColumn,
-    createTask,
-    tasks,
-    deleteTask,
-    updateTask,
-}: Props) {
+const ColumnContainer: React.FC<ColumnContainerProps> = (props) => {
+    const {
+        column,
+        createTask,
+        deleteColumn,
+        deleteTask,
+        tasks,
+        updateColumn,
+        updateTask,
+    } = props;
     const [editMode, setEditMode] = useState(false);
 
     const tasksIds = useMemo(() => {
@@ -62,18 +59,7 @@ function ColumnContainer({
             <div
                 ref={setNodeRef}
                 style={style}
-                className="
-      bg-muted
-      opacity-40
-      border-2
-      border-pink-500
-      w-[350px]
-      h-[500px]
-      max-h-[500px]
-      rounded-md
-      flex
-      flex-col
-      "
+                className="bg-muted opacity-40 border-2 border-primary w-[350px] h-[500px] max-h-[500px] rounded-md flex flex-col"
             ></div>
         );
     }
@@ -82,15 +68,7 @@ function ColumnContainer({
         <div
             ref={setNodeRef}
             style={style}
-            className="
-  bg-muted
-  w-[350px]
-  h-[500px]
-  max-h-[500px]
-  rounded-md
-  flex
-  flex-col
-  "
+            className="bg-muted w-[350px] h-[500px] max-h-[500px] rounded-md flex flex-col"
         >
             {/* Column title */}
             <div
@@ -99,33 +77,10 @@ function ColumnContainer({
                 onClick={() => {
                     setEditMode(true);
                 }}
-                className="
-      text-md
-      h-[60px]
-      cursor-grab
-      rounded-md
-      rounded-b-none
-      p-3
-      font-bold
-      bg-muted
-      flex
-      items-center
-      justify-between
-      "
+                className="text-md h-[60px] cursor-grab rounded-md rounded-b-none p-3 font-bold bg-muted flex items-center justify-between"
             >
                 <div className="flex gap-2">
-                    <div
-                        className="
-        flex
-        justify-center
-        items-center
-        bg-muted
-        px-2
-        py-1
-        text-sm
-        rounded-full
-        "
-                    >
+                    <div className="flex justify-center items-center bg-muted px-2 py-1 text-sm rounded-full">
                         0
                     </div>
                     {!editMode && column.title}
@@ -151,14 +106,7 @@ function ColumnContainer({
                     onClick={() => {
                         deleteColumn(column.id);
                     }}
-                    className="
-        stroke-gray-500
-        hover:stroke-primary
-        hover:bg-muted
-        rounded
-        px-1
-        py-2
-        "
+                    className=" stroke-gray-500 hover:stroke-primary hover:bg-muted rounded px-1 py-2"
                 >
                     <TrashIcon />
                 </button>
@@ -189,6 +137,6 @@ function ColumnContainer({
             </button>
         </div>
     );
-}
+};
 
 export default ColumnContainer;
