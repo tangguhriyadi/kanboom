@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import {
     DndContext,
@@ -118,10 +118,6 @@ const KanbanBoard: React.FC = () => {
             },
         })
     );
-
-    useEffect(() => {
-        createNewColumn();
-    }, []);
 
     return (
         <section className="m-auto flex min-h-[72vh] w-full overflow-x-auto overflow-y-hidden px-[40px] py-8">
