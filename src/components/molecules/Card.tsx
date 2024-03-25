@@ -2,11 +2,11 @@
 import { useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Id, Card } from "../../types/kanban";
+import { Id, Card as CardType } from "@/types/kanban";
 import TrashIcon from "../atoms/TrashIcon";
 
 interface CardProps {
-    card: Card;
+    card: CardType;
     deleteCard: (id: Id) => void;
     updateCard: (id: Id, content: string) => void;
 }
