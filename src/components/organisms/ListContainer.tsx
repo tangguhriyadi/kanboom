@@ -51,7 +51,7 @@ const ListContainer: React.FC<ListContainerProps> = (props) => {
 
     const style = {
         transition,
-        transform: CSS.Transform.toString(transform),
+        transform: CSS.Translate.toString(transform),
     };
 
     if (isDragging) {
@@ -59,8 +59,48 @@ const ListContainer: React.FC<ListContainerProps> = (props) => {
             <div
                 ref={setNodeRef}
                 style={style}
-                className="bg-muted opacity-40 border-2 border-primary w-[350px] h-[500px] max-h-[500px] rounded-md flex flex-col"
-            ></div>
+                className="border rounded-md border-primary"
+            >
+                <div className="bg-muted w-[350px] rounded-md flex flex-col opacity-0">
+                    {/* Column title */}
+                    <div className="text-md h-[60px] cursor-grab rounded-md rounded-b-none p-3 font-bold bg-muted flex items-center justify-between">
+                        <div className="flex gap-2">
+                            {/* <div className="flex justify-center items-center bg-muted px-2 py-1 text-sm rounded-full">
+                    0
+                </div> */}
+                            {!editMode && list.title}
+                            {editMode && (
+                                <input
+                                    className="bg-white focus:border-primary border rounded outline-none px-2"
+                                    value={list.title}
+                                />
+                            )}
+                        </div>
+                        <button className=" stroke-gray-500 hover:stroke-primary hover:bg-muted rounded px-1 py-2">
+                            <TrashIcon />
+                        </button>
+                    </div>
+
+                    {/* list task container */}
+                    <div className="flex flex-col gap-4 p-2 overflow-x-hidden overflow-y-auto">
+                        <SortableContext items={cardIds}>
+                            {cards.map((card) => (
+                                <Card
+                                    key={card.id}
+                                    card={card}
+                                    deleteCard={deleteCard}
+                                    updateCard={updateCard}
+                                />
+                            ))}
+                            <button className="flex gap-2 items-center bg-muted border-2 rounded-md p-4 border-x-primbg-muted  hover:border-primary active:bg-secondary">
+                                <PlusIcon />
+                                Add Card
+                            </button>
+                        </SortableContext>
+                    </div>
+                    {/* Column footer */}
+                </div>
+            </div>
         );
     }
 
@@ -68,7 +108,7 @@ const ListContainer: React.FC<ListContainerProps> = (props) => {
         <div
             ref={setNodeRef}
             style={style}
-            className="bg-muted w-[350px] h-[500px] max-h-[500px] rounded-md flex flex-col"
+            className="bg-muted w-[350px] rounded-md flex flex-col"
         >
             {/* Column title */}
             <div
@@ -113,7 +153,7 @@ const ListContainer: React.FC<ListContainerProps> = (props) => {
             </div>
 
             {/* list task container */}
-            <div className="flex flex-grow flex-col gap-4 p-2 overflow-x-hidden overflow-y-auto">
+            <div className="flex flex-col gap-4 p-2 overflow-x-hidden overflow-y-auto">
                 <SortableContext items={cardIds}>
                     {cards.map((card) => (
                         <Card
@@ -123,18 +163,18 @@ const ListContainer: React.FC<ListContainerProps> = (props) => {
                             updateCard={updateCard}
                         />
                     ))}
+                    <button
+                        className="flex gap-2 items-center bg-muted border-2 rounded-md p-4 border-x-primbg-muted  hover:border-primary active:bg-secondary"
+                        onClick={() => {
+                            createCard(list.id);
+                        }}
+                    >
+                        <PlusIcon />
+                        Add Card
+                    </button>
                 </SortableContext>
             </div>
             {/* Column footer */}
-            <button
-                className="flex gap-2 items-center border-primbg-muted border-2 rounded-md p-4 border-x-primbg-muted hover:bg-mainBackgroundColor hover:text-primary active:bg-secondary"
-                onClick={() => {
-                    createCard(list.id);
-                }}
-            >
-                <PlusIcon />
-                Add Card
-            </button>
         </div>
     );
 };

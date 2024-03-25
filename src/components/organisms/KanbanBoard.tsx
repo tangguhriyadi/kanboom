@@ -122,66 +122,67 @@ const KanbanBoard: React.FC = () => {
 
     return (
         <section className="m-auto flex min-h-[72vh] w-full overflow-x-auto overflow-y-hidden px-[40px] py-8">
-            <DndContext
-                sensors={sensors}
-                onDragStart={onDragStart}
-                onDragEnd={onDragEnd}
-                onDragOver={onDragOver}
-            >
-                <div className="flex gap-4">
+            <div>
+                <DndContext
+                    sensors={sensors}
+                    onDragStart={onDragStart}
+                    onDragEnd={onDragEnd}
+                    onDragOver={onDragOver}
+                >
                     <div className="flex gap-4">
-                        <SortableContext items={listId}>
-                            {lists.map((col) => (
+                        <div className="flex gap-4 items-baseline">
+                            <SortableContext items={listId}>
+                                {lists.map((list) => (
+                                    <ListContainer
+                                        key={list.id}
+                                        list={list}
+                                        deleteList={deleteList}
+                                        updateList={updateList}
+                                        createCard={createCard}
+                                        deleteCard={deleteCard}
+                                        updateCard={updateCard}
+                                        cards={tasks.filter(
+                                            (task) => task.listId === list.id
+                                        )}
+                                    />
+                                ))}
+                            </SortableContext>
+                        </div>
+                        <button
+                            onClick={() => createNewList()}
+                            className="h-[60px] w-[350px] min-w-[350px] cursor-pointer rounded-lg bg-secondary border-2 p-4 flex gap-2"
+                        >
+                            <PlusIcon />
+                            Add List
+                        </button>
+                    </div>
+                    {createPortal(
+                        <DragOverlay>
+                            {activeList && (
                                 <ListContainer
-                                    key={col.id}
-                                    list={col}
+                                    list={activeList}
                                     deleteList={deleteList}
                                     updateList={updateList}
                                     createCard={createCard}
                                     deleteCard={deleteCard}
                                     updateCard={updateCard}
                                     cards={tasks.filter(
-                                        (task) => task.listId === col.id
+                                        (task) => task.listId === activeList.id
                                     )}
                                 />
-                            ))}
-                        </SortableContext>
-                    </div>
-                    <button
-                        onClick={() => createNewList()}
-                        className="h-[60px] w-[350px] min-w-[350px] cursor-pointer rounded-lg bg-secondary border-2 p-4 flex gap-2"
-                    >
-                        <PlusIcon />
-                        Add List
-                    </button>
-                </div>
-
-                {createPortal(
-                    <DragOverlay>
-                        {activeList && (
-                            <ListContainer
-                                list={activeList}
-                                deleteList={deleteList}
-                                updateList={updateList}
-                                createCard={createCard}
-                                deleteCard={deleteCard}
-                                updateCard={updateCard}
-                                cards={tasks.filter(
-                                    (task) => task.listId === activeList.id
-                                )}
-                            />
-                        )}
-                        {activeCard && (
-                            <TaskCard
-                                card={activeCard}
-                                deleteCard={deleteCard}
-                                updateCard={updateCard}
-                            />
-                        )}
-                    </DragOverlay>,
-                    document.body
-                )}
-            </DndContext>
+                            )}
+                            {activeCard && (
+                                <TaskCard
+                                    card={activeCard}
+                                    deleteCard={deleteCard}
+                                    updateCard={updateCard}
+                                />
+                            )}
+                        </DragOverlay>,
+                        document.body
+                    )}
+                </DndContext>
+            </div>
         </section>
     );
     function createCard(listId: Id) {
