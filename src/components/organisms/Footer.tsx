@@ -5,7 +5,7 @@ import Socials from "../molecules/Socials";
 
 const Footer: React.FC = (props) => {
     return (
-        <footer className="w-full flex flex-col justify-center items-center gap-y-1">
+        <footer className="w-full flex flex-col justify-center items-center gap-y-1 mb-4">
             <div className="flex justify-center">
                 <Image
                     src="/kb-footer.png"
