@@ -2,36 +2,36 @@
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useMemo, useState } from "react";
-import { Column, Id, Task } from "@/types/kanban";
+import { List, Id, Card as CardType } from "@/types/kanban";
 import TrashIcon from "../atoms/TrashIcon";
 import PlusIcon from "../atoms/PlusIcon";
-import TaskCard from "../molecules/TaskCard";
+import Card from "../molecules/Card";
 
-interface ColumnContainerProps {
-    column: Column;
-    deleteColumn: (id: Id) => void;
-    updateColumn: (id: Id, title: string) => void;
-    createTask: (columnId: Id) => void;
-    updateTask: (id: Id, content: string) => void;
-    deleteTask: (id: Id) => void;
-    tasks: Task[];
+interface ListContainerProps {
+    list: List;
+    deleteList: (id: Id) => void;
+    updateList: (id: Id, title: string) => void;
+    createCard: (columnId: Id) => void;
+    updateCard: (id: Id, content: string) => void;
+    deleteCard: (id: Id) => void;
+    cards: CardType[];
 }
 
-const ColumnContainer: React.FC<ColumnContainerProps> = (props) => {
+const ListContainer: React.FC<ListContainerProps> = (props) => {
     const {
-        column,
-        createTask,
-        deleteColumn,
-        deleteTask,
-        tasks,
-        updateColumn,
-        updateTask,
+        list,
+        createCard,
+        deleteList,
+        deleteCard,
+        cards,
+        updateList,
+        updateCard,
     } = props;
     const [editMode, setEditMode] = useState(false);
 
-    const tasksIds = useMemo(() => {
-        return tasks.map((task) => task.id);
-    }, [tasks]);
+    const cardIds = useMemo(() => {
+        return cards.map((card) => card.id);
+    }, [cards]);
 
     const {
         setNodeRef,
@@ -41,10 +41,10 @@ const ColumnContainer: React.FC<ColumnContainerProps> = (props) => {
         transition,
         isDragging,
     } = useSortable({
-        id: column.id,
+        id: list.id,
         data: {
-            type: "Column",
-            column,
+            type: "List",
+            list,
         },
         disabled: editMode,
     });
@@ -83,13 +83,13 @@ const ColumnContainer: React.FC<ColumnContainerProps> = (props) => {
                     {/* <div className="flex justify-center items-center bg-muted px-2 py-1 text-sm rounded-full">
                         0
                     </div> */}
-                    {!editMode && column.title}
+                    {!editMode && list.title}
                     {editMode && (
                         <input
                             className="bg-white focus:border-primary border rounded outline-none px-2"
-                            value={column.title}
+                            value={list.title}
                             onChange={(e) =>
-                                updateColumn(column.id, e.target.value)
+                                updateList(list.id, e.target.value)
                             }
                             autoFocus
                             onBlur={() => {
@@ -104,7 +104,7 @@ const ColumnContainer: React.FC<ColumnContainerProps> = (props) => {
                 </div>
                 <button
                     onClick={() => {
-                        deleteColumn(column.id);
+                        deleteList(list.id);
                     }}
                     className=" stroke-gray-500 hover:stroke-primary hover:bg-muted rounded px-1 py-2"
                 >
@@ -112,15 +112,15 @@ const ColumnContainer: React.FC<ColumnContainerProps> = (props) => {
                 </button>
             </div>
 
-            {/* Column task container */}
+            {/* list task container */}
             <div className="flex flex-grow flex-col gap-4 p-2 overflow-x-hidden overflow-y-auto">
-                <SortableContext items={tasksIds}>
-                    {tasks.map((task) => (
-                        <TaskCard
-                            key={task.id}
-                            task={task}
-                            deleteTask={deleteTask}
-                            updateTask={updateTask}
+                <SortableContext items={cardIds}>
+                    {cards.map((card) => (
+                        <Card
+                            key={card.id}
+                            card={card}
+                            deleteCard={deleteCard}
+                            updateCard={updateCard}
                         />
                     ))}
                 </SortableContext>
@@ -129,14 +129,14 @@ const ColumnContainer: React.FC<ColumnContainerProps> = (props) => {
             <button
                 className="flex gap-2 items-center border-primbg-muted border-2 rounded-md p-4 border-x-primbg-muted hover:bg-mainBackgroundColor hover:text-primary active:bg-secondary"
                 onClick={() => {
-                    createTask(column.id);
+                    createCard(list.id);
                 }}
             >
                 <PlusIcon />
-                Add task
+                Add Card
             </button>
         </div>
     );
 };
 
-export default ColumnContainer;
+export default ListContainer;

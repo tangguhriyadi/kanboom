@@ -12,12 +12,12 @@ import {
     useSensors,
 } from "@dnd-kit/core";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
-import { Column, Id, Task } from "../../types/kanban";
-import ColumnContainer from "./ColumnContainer";
-import TaskCard from "../molecules/TaskCard";
+import { List, Id, Card as CardType } from "../../types/kanban";
+import ListContainer from "./ListContainer";
+import TaskCard from "../molecules/Card";
 import PlusIcon from "../atoms/PlusIcon";
 
-// const defaultCols: Column[] = [
+// const defaultCols: List[] = [
 //     {
 //         id: "todo",
 //         title: "Todo",
@@ -35,81 +35,82 @@ import PlusIcon from "../atoms/PlusIcon";
 // const defaultTasks: Task[] = [
 //     {
 //         id: "1",
-//         columnId: "todo",
+//         listId: "todo",
 //         content: "List admin APIs for dashboard",
 //     },
 //     {
 //         id: "2",
-//         columnId: "todo",
+//         listId: "todo",
 //         content:
 //             "Develop user registration functionality with OTP delivered on SMS after email confirmation and phone number confirmation",
 //     },
 //     {
 //         id: "3",
-//         columnId: "doing",
+//         listId: "doing",
 //         content: "Conduct security testing",
 //     },
 //     {
 //         id: "4",
-//         columnId: "doing",
+//         listId: "doing",
 //         content: "Analyze competitors",
 //     },
 //     {
 //         id: "5",
-//         columnId: "done",
+//         listId: "done",
 //         content: "Create UI kit documentation",
 //     },
 //     {
 //         id: "6",
-//         columnId: "done",
+//         listId: "done",
 //         content: "Dev meeting",
 //     },
 //     {
 //         id: "7",
-//         columnId: "done",
+//         listId: "done",
 //         content: "Deliver dashboard prototype",
 //     },
 //     {
 //         id: "8",
-//         columnId: "todo",
+//         listId: "todo",
 //         content: "Optimize application performance",
 //     },
 //     {
 //         id: "9",
-//         columnId: "todo",
+//         listId: "todo",
 //         content: "Implement data validation",
 //     },
 //     {
 //         id: "10",
-//         columnId: "todo",
+//         listId: "todo",
 //         content: "Design database schema",
 //     },
 //     {
 //         id: "11",
-//         columnId: "todo",
+//         listId: "todo",
 //         content: "Integrate SSL web certificates into workflow",
 //     },
 //     {
 //         id: "12",
-//         columnId: "doing",
+//         listId: "doing",
 //         content: "Implement error logging and monitoring",
 //     },
 //     {
 //         id: "13",
-//         columnId: "doing",
+//         listId: "doing",
 //         content: "Design and implement responsive UI",
 //     },
 // ];
 
 const KanbanBoard: React.FC = () => {
-    const [columns, setColumns] = useState<Column[]>([]);
-    const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
+    const [lists, setLists] = useState<List[]>([]);
 
-    const [tasks, setTasks] = useState<Task[]>([]);
+    const listId = useMemo(() => lists.map((col) => col.id), [lists]);
 
-    const [activeColumn, setActiveColumn] = useState<Column | null>(null);
+    const [tasks, setTasks] = useState<CardType[]>([]);
 
-    const [activeTask, setActiveTask] = useState<Task | null>(null);
+    const [activeList, setActiveList] = useState<List | null>(null);
+
+    const [activeCard, setactiveCard] = useState<CardType | null>(null);
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -129,52 +130,52 @@ const KanbanBoard: React.FC = () => {
             >
                 <div className="flex gap-4">
                     <div className="flex gap-4">
-                        <SortableContext items={columnsId}>
-                            {columns.map((col) => (
-                                <ColumnContainer
+                        <SortableContext items={listId}>
+                            {lists.map((col) => (
+                                <ListContainer
                                     key={col.id}
-                                    column={col}
-                                    deleteColumn={deleteColumn}
-                                    updateColumn={updateColumn}
-                                    createTask={createTask}
-                                    deleteTask={deleteTask}
-                                    updateTask={updateTask}
-                                    tasks={tasks.filter(
-                                        (task) => task.columnId === col.id
+                                    list={col}
+                                    deleteList={deleteList}
+                                    updateList={updateList}
+                                    createCard={createCard}
+                                    deleteCard={deleteCard}
+                                    updateCard={updateCard}
+                                    cards={tasks.filter(
+                                        (task) => task.listId === col.id
                                     )}
                                 />
                             ))}
                         </SortableContext>
                     </div>
                     <button
-                        onClick={() => createNewColumn()}
+                        onClick={() => createNewList()}
                         className="h-[60px] w-[350px] min-w-[350px] cursor-pointer rounded-lg bg-secondary border-2 p-4 flex gap-2"
                     >
                         <PlusIcon />
-                        Add Column
+                        Add List
                     </button>
                 </div>
 
                 {createPortal(
                     <DragOverlay>
-                        {activeColumn && (
-                            <ColumnContainer
-                                column={activeColumn}
-                                deleteColumn={deleteColumn}
-                                updateColumn={updateColumn}
-                                createTask={createTask}
-                                deleteTask={deleteTask}
-                                updateTask={updateTask}
-                                tasks={tasks.filter(
-                                    (task) => task.columnId === activeColumn.id
+                        {activeList && (
+                            <ListContainer
+                                list={activeList}
+                                deleteList={deleteList}
+                                updateList={updateList}
+                                createCard={createCard}
+                                deleteCard={deleteCard}
+                                updateCard={updateCard}
+                                cards={tasks.filter(
+                                    (task) => task.listId === activeList.id
                                 )}
                             />
                         )}
-                        {activeTask && (
+                        {activeCard && (
                             <TaskCard
-                                task={activeTask}
-                                deleteTask={deleteTask}
-                                updateTask={updateTask}
+                                card={activeCard}
+                                deleteCard={deleteCard}
+                                updateCard={updateCard}
                             />
                         )}
                     </DragOverlay>,
@@ -183,22 +184,22 @@ const KanbanBoard: React.FC = () => {
             </DndContext>
         </section>
     );
-    function createTask(columnId: Id) {
-        const newTask: Task = {
+    function createCard(listId: Id) {
+        const newTask: CardType = {
             id: generateId(),
-            columnId,
+            listId,
             content: `Task ${tasks.length + 1}`,
         };
 
         setTasks([...tasks, newTask]);
     }
 
-    function deleteTask(id: Id) {
+    function deleteCard(id: Id) {
         const newTasks = tasks.filter((task) => task.id !== id);
         setTasks(newTasks);
     }
 
-    function updateTask(id: Id, content: string) {
+    function updateCard(id: Id, content: string) {
         const newTasks = tasks.map((task) => {
             if (task.id !== id) return task;
             return { ...task, content };
@@ -207,47 +208,47 @@ const KanbanBoard: React.FC = () => {
         setTasks(newTasks);
     }
 
-    function createNewColumn() {
-        const columnToAdd: Column = {
+    function createNewList() {
+        const ListToAdd: List = {
             id: generateId(),
-            title: `Column ${columns.length + 1}`,
+            title: `List ${lists.length + 1}`,
         };
 
-        setColumns([...columns, columnToAdd]);
+        setLists([...lists, ListToAdd]);
     }
 
-    function deleteColumn(id: Id) {
-        const filteredColumns = columns.filter((col) => col.id !== id);
-        setColumns(filteredColumns);
+    function deleteList(id: Id) {
+        const filteredlists = lists.filter((col) => col.id !== id);
+        setLists(filteredlists);
 
-        const newTasks = tasks.filter((t) => t.columnId !== id);
+        const newTasks = tasks.filter((t) => t.listId !== id);
         setTasks(newTasks);
     }
 
-    function updateColumn(id: Id, title: string) {
-        const newColumns = columns.map((col) => {
+    function updateList(id: Id, title: string) {
+        const newlists = lists.map((col) => {
             if (col.id !== id) return col;
             return { ...col, title };
         });
 
-        setColumns(newColumns);
+        setLists(newlists);
     }
 
     function onDragStart(event: DragStartEvent) {
-        if (event.active.data.current?.type === "Column") {
-            setActiveColumn(event.active.data.current.column);
+        if (event.active.data.current?.type === "List") {
+            setActiveList(event.active.data.current.list);
             return;
         }
 
-        if (event.active.data.current?.type === "Task") {
-            setActiveTask(event.active.data.current.task);
+        if (event.active.data.current?.type === "Card") {
+            setactiveCard(event.active.data.current.card);
             return;
         }
     }
 
     function onDragEnd(event: DragEndEvent) {
-        setActiveColumn(null);
-        setActiveTask(null);
+        setActiveList(null);
+        setactiveCard(null);
 
         const { active, over } = event;
         if (!over) return;
@@ -257,21 +258,17 @@ const KanbanBoard: React.FC = () => {
 
         if (activeId === overId) return;
 
-        const isActiveAColumn = active.data.current?.type === "Column";
-        if (!isActiveAColumn) return;
+        const isActiveAList = active.data.current?.type === "List";
+        if (!isActiveAList) return;
 
-        console.log("DRAG END");
-
-        setColumns((columns) => {
-            const activeColumnIndex = columns.findIndex(
+        setLists((lists) => {
+            const activeListIndex = lists.findIndex(
                 (col) => col.id === activeId
             );
 
-            const overColumnIndex = columns.findIndex(
-                (col) => col.id === overId
-            );
+            const overListIndex = lists.findIndex((col) => col.id === overId);
 
-            return arrayMove(columns, activeColumnIndex, overColumnIndex);
+            return arrayMove(lists, activeListIndex, overListIndex);
         });
     }
 
@@ -284,20 +281,20 @@ const KanbanBoard: React.FC = () => {
 
         if (activeId === overId) return;
 
-        const isActiveATask = active.data.current?.type === "Task";
-        const isOverATask = over.data.current?.type === "Task";
+        const isActiveACard = active.data.current?.type === "Card";
+        const isOverACard = over.data.current?.type === "Card";
 
-        if (!isActiveATask) return;
+        if (!isActiveACard) return;
 
         // Im dropping a Task over another Task
-        if (isActiveATask && isOverATask) {
+        if (isActiveACard && isOverACard) {
             setTasks((tasks) => {
                 const activeIndex = tasks.findIndex((t) => t.id === activeId);
                 const overIndex = tasks.findIndex((t) => t.id === overId);
 
-                if (tasks[activeIndex].columnId != tasks[overIndex].columnId) {
+                if (tasks[activeIndex].listId != tasks[overIndex].listId) {
                     // Fix introduced after video recording
-                    tasks[activeIndex].columnId = tasks[overIndex].columnId;
+                    tasks[activeIndex].listId = tasks[overIndex].listId;
                     return arrayMove(tasks, activeIndex, overIndex - 1);
                 }
 
@@ -305,15 +302,15 @@ const KanbanBoard: React.FC = () => {
             });
         }
 
-        const isOverAColumn = over.data.current?.type === "Column";
+        const isOverAList = over.data.current?.type === "List";
 
         // Im dropping a Task over a column
-        if (isActiveATask && isOverAColumn) {
+        if (isActiveACard && isOverAList) {
             setTasks((tasks) => {
                 const activeIndex = tasks.findIndex((t) => t.id === activeId);
 
-                tasks[activeIndex].columnId = overId;
-                console.log("DROPPING TASK OVER COLUMN", { activeIndex });
+                tasks[activeIndex].listId = overId;
+                console.log("DROPPING TASK OVER LIST", { activeIndex });
                 return arrayMove(tasks, activeIndex, activeIndex);
             });
         }

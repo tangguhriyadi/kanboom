@@ -2,17 +2,17 @@
 import { useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Id, Task } from "../../types/kanban";
+import { Id, Card } from "../../types/kanban";
 import TrashIcon from "../atoms/TrashIcon";
 
-interface TaskCardProps {
-    task: Task;
-    deleteTask: (id: Id) => void;
-    updateTask: (id: Id, content: string) => void;
+interface CardProps {
+    card: Card;
+    deleteCard: (id: Id) => void;
+    updateCard: (id: Id, content: string) => void;
 }
 
-const TaskCard: React.FC<TaskCardProps> = (props) => {
-    const { task, deleteTask, updateTask } = props;
+const Card: React.FC<CardProps> = (props) => {
+    const { card, deleteCard, updateCard } = props;
     const [mouseIsOver, setMouseIsOver] = useState(false);
     const [editMode, setEditMode] = useState(true);
 
@@ -24,10 +24,10 @@ const TaskCard: React.FC<TaskCardProps> = (props) => {
         transition,
         isDragging,
     } = useSortable({
-        id: task.id,
+        id: card.id,
         data: {
-            type: "Task",
-            task,
+            type: "Card",
+            card,
         },
         disabled: editMode,
     });
@@ -47,10 +47,7 @@ const TaskCard: React.FC<TaskCardProps> = (props) => {
             <div
                 ref={setNodeRef}
                 style={style}
-                className="
-        opacity-30
-      bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl border-2 border-primary  cursor-grab relative 
-      "
+                className="opacity-30 bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl border-2 border-primary  cursor-grab relative "
             />
         );
     }
@@ -66,7 +63,7 @@ const TaskCard: React.FC<TaskCardProps> = (props) => {
             >
                 <textarea
                     className="h-[90%] w-full resize-none border-none rounded bg-transparent focus:outline-none"
-                    value={task.content}
+                    value={card.content}
                     autoFocus
                     placeholder="Task content here"
                     onBlur={toggleEditMode}
@@ -75,7 +72,7 @@ const TaskCard: React.FC<TaskCardProps> = (props) => {
                             toggleEditMode();
                         }
                     }}
-                    onChange={(e) => updateTask(task.id, e.target.value)}
+                    onChange={(e) => updateCard(card.id, e.target.value)}
                 />
             </div>
         );
@@ -97,13 +94,13 @@ const TaskCard: React.FC<TaskCardProps> = (props) => {
             }}
         >
             <p className="my-auto h-[90%] w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap">
-                {task.content}
+                {card.content}
             </p>
 
             {mouseIsOver && (
                 <button
                     onClick={() => {
-                        deleteTask(task.id);
+                        deleteCard(card.id);
                     }}
                     className="stroke-gray-500 absolute right-4 top-1/2 -translate-y-1/2 bg-columnBackgroundColor p-2 rounded opacity-60 hover:opacity-100 hover:stroke-primary"
                 >
@@ -114,4 +111,4 @@ const TaskCard: React.FC<TaskCardProps> = (props) => {
     );
 };
 
-export default TaskCard;
+export default Card;
